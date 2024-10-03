@@ -1,0 +1,14 @@
+# HW 6 Script
+
+# Author: Isabelle Meredith
+# Date: 10/3/2024
+# Description: Script to evaluate and plot the impact of nearby lead smelter on children's IQ
+
+library(knitr)
+
+dfLead <- read.csv("../DataRaw/lead-iq-01.csv")
+
+head(dfLead)
+
+boxplot(dfLead$IQ ~ dfLead$Smelter)
+
