@@ -8,7 +8,7 @@ knit: (function(inputFile, encoding) {
       rmarkdown::render(inputFile,
                         output_format="pdf_document",
                         encoding=encoding,
-                        output_dir=out_dir)}) #file.path(dirname(inputFile), out_dir)
+                        output_dir=out_dir)})
 ---
 
 
@@ -29,7 +29,9 @@ dfLeadRaw <- read.csv("../DataRaw/lead-iq-01.csv")
 
 head(dfLeadRaw)
 
-# Data processing takes place here. Surely in the future I won't need to do anything with this
+# Data processing takes place here. 
+# Removing an outlier at 999
+dfLeadRaw <- dfLeadRaw[(dfLeadRaw$IQ != 999), ]
 write.csv(dfLeadRaw, "../DataProcessed/lead-iq-cleaned.csv")
 
 # Read in the processed form of the data instead
