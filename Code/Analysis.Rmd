@@ -66,5 +66,6 @@ dfLeadSummary <- dfLead %>%
   summarise("Mean IQ" = mean(IQ), "IQ SD" = sd(IQ), "Group Count" = n())
 kable(dfLeadSummary)
 ```
+The table contains the values for the group means, standard deviations, and counts for the group near and far from the smelter.
 
-The mean IQ for close to the smelter is `r meanNear` and the mean IQ far from the smelter is `r meanFar`. The table contains the values for the group means, standard deviations, and counts for the group near and far from the smelter.
+The mean IQ for close to the smelter is `r meanNear` and the mean IQ far from the smelter is `r meanFar`. 
