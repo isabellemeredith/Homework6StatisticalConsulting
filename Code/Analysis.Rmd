@@ -1,3 +1,18 @@
+---
+title: "Homework 6 Report"
+author: "Isabelle Meredith"
+date: "`r Sys.Date()`"
+
+knit: (function(inputFile, encoding) {
+      out_dir <- "../Reports";
+      rmarkdown::render(inputFile,
+                        output_format="pdf_document",
+                        encoding=encoding,
+                        output_dir=out_dir)}) #file.path(dirname(inputFile), out_dir)
+---
+
+
+```{r, include = FALSE}
 # HW 6 Script
 
 # Author: Isabelle Meredith
@@ -5,10 +20,51 @@
 # Description: Script to evaluate and plot the impact of nearby lead smelter on children's IQ
 
 library(knitr)
+library(ggplot2)
+library(dplyr)
+```
 
-dfLead <- read.csv("../DataRaw/lead-iq-01.csv")
+```{r}
+dfLeadRaw <- read.csv("../DataRaw/lead-iq-01.csv")
 
-head(dfLead)
+head(dfLeadRaw)
 
-boxplot(dfLead$IQ ~ dfLead$Smelter)
+# Data processing takes place here. Surely in the future I won't need to do anything with this
+write.csv(dfLeadRaw, "../DataProcessed/lead-iq-cleaned.csv")
 
+# Read in the processed form of the data instead
+dfLead <- read.csv("../DataProcessed/lead-iq-cleaned.csv")
+  
+```
+
+```{r}
+ggplot(dfLead, aes(IQ, fill = Smelter)) + 
+   geom_histogram(alpha = 0.6, position = 'identity', binwidth = 5) + 
+   xlab("Child IQ") +
+   guides(fill = guide_legend(title = "Distance to Smelter")) +
+   theme(legend.position = "top")
+```
+Histogram of IQs comparing children who were near to the smelter with children who were far from the smelter. 
+
+```{r}
+ggplot(dfLead, aes(x=IQ, y = Smelter, fill = Smelter)) + 
+   geom_boxplot(position = 'identity') +
+   ylab("Distance to Smelter") +
+   guides(fill="none")
+```
+Boxplot of IQs comparing children who were near to the smelter with children who were far from the smelter. 
+
+```{r, include = FALSE}
+meanNear <- mean(dfLead[dfLead$Smelter == "Near", "IQ"])
+meanFar <- mean(dfLead[dfLead$Smelter == "Far", "IQ"])
+```
+
+```{r}
+dfLeadSummary <- dfLead %>% 
+  group_by(Smelter) %>%
+  rename("Smelter Distance" = Smelter) %>%
+  summarise("Mean IQ" = mean(IQ), "IQ SD" = sd(IQ), "Group Count" = n())
+kable(dfLeadSummary)
+```
+
+The mean IQ for close to the smelter is `r meanNear` and the mean IQ far from the smelter is `r meanFar`. The table contains the values for the group means, standard deviations, and counts for the group near and far from the smelter.
